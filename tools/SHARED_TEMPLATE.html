@@ -1,0 +1,174 @@
+<!-- 
+    SHARED COMPONENT TEMPLATE FOR DEVTOOLBOX TOOLS
+    Copy this into each tool's HTML file
+-->
+
+<!-- Add to <head> after Tailwind CDN -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<!-- Add to <style> section -->
+<style>
+    /* Modal Styles */
+    .modal-overlay {
+        background-color: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        resize: both;
+        overflow: auto;
+        min-width: 400px;
+        min-height: 300px;
+        max-width: 90vw;
+        max-height: 90vh;
+    }
+
+    /* Markdown Styles */
+    .markdown-body {
+        color: #cbd5e1;
+        line-height: 1.6;
+    }
+
+    .markdown-body h1,
+    .markdown-body h2,
+    .markdown-body h3,
+    .markdown-body h4 {
+        color: #f8fafc;
+        font-weight: 700;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+    }
+
+    .markdown-body h1 {
+        font-size: 2em;
+        border-bottom: 1px solid #334155;
+        padding-bottom: 0.3em;
+    }
+
+    .markdown-body h2 {
+        font-size: 1.5em;
+        border-bottom: 1px solid #334155;
+        padding-bottom: 0.3em;
+    }
+
+    .markdown-body h3 {
+        font-size: 1.25em;
+    }
+
+    .markdown-body h4 {
+        font-size: 1em;
+    }
+
+    .markdown-body p {
+        margin-bottom: 1em;
+    }
+
+    .markdown-body a {
+        color: #38bdf8;
+        text-decoration: none;
+    }
+
+    .markdown-body a:hover {
+        text-decoration: underline;
+    }
+
+    .markdown-body ul,
+    .markdown-body ol {
+        margin-bottom: 1em;
+        padding-left: 2em;
+    }
+
+    .markdown-body code {
+        font-family: 'Fira Code', monospace;
+        background-color: #0f172a;
+        padding: 0.2em 0.4em;
+        border-radius: 0.25em;
+        font-size: 0.875em;
+        color: #f472b6;
+    }
+
+    .markdown-body pre {
+        background-color: #0f172a;
+        padding: 1em;
+        border-radius: 0.5em;
+        overflow-x: auto;
+        margin-bottom: 1em;
+        border: 1px solid #334155;
+    }
+
+    .markdown-body pre code {
+        background-color: transparent;
+        padding: 0;
+        color: #a5b4fc;
+    }
+
+    .markdown-body blockquote {
+        border-left: 4px solid #334155;
+        padding-left: 1em;
+        color: #94a3b8;
+        margin-bottom: 1em;
+    }
+</style>
+
+<!-- Add README button to header (adjust position as needed) -->
+<button id="readme-btn"
+    class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round"
+            d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+    </svg>
+    README
+</button>
+
+<!-- Add modal before closing </body> -->
+<div id="readme-modal" class="modal-overlay fixed inset-0 hidden flex items-center justify-center z-50">
+    <div class="modal-content w-[800px] h-[600px] rounded-lg flex flex-col">
+        <div class="flex justify-between items-center p-4 border-b border-slate-700 shrink-0">
+            <h2 class="text-xl font-bold text-white">Documentation</h2>
+            <button id="close-modal"
+                class="text-slate-400 hover:text-white transition-colors p-1 rounded hover:bg-slate-700">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div id="readme-content" class="flex-1 overflow-auto p-6 markdown-body">
+            Loading...
+        </div>
+    </div>
+</div>
+
+<!-- Add to JavaScript section -->
+<script>
+    // README Modal Functions
+    async function openReadme() {
+        const modal = document.getElementById('readme-modal');
+        const content = document.getElementById('readme-content');
+
+        modal.classList.remove('hidden');
+
+        try {
+            const response = await fetch('README.md');
+            const markdown = await response.text();
+            content.innerHTML = marked.parse(markdown);
+        } catch (e) {
+            content.innerHTML = '<p class="text-rose-400">Error loading README.md</p>';
+        }
+    }
+
+    function closeReadme() {
+        document.getElementById('readme-modal').classList.add('hidden');
+    }
+
+    // Add event listeners (call this in your init function)
+    document.getElementById('readme-btn').addEventListener('click', openReadme);
+    document.getElementById('close-modal').addEventListener('click', closeReadme);
+    document.getElementById('readme-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'readme-modal') closeReadme();
+    });
+</script>

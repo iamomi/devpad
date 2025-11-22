@@ -6,26 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Regex Tester & Visualizer Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="../../shared/styles.css">
+    <script src="../../shared/utils.js" defer></script>
     <style>
-        /* Custom Scrollbars */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1f2937;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
             background-color: #0f172a;
@@ -289,6 +273,25 @@
 
         update();
     </script>
+
+    <!-- README Modal -->
+    <div id="readme-modal" class="modal-overlay fixed inset-0 hidden flex items-center justify-center z-50">
+        <div class="modal-content w-[800px] h-[600px] rounded-lg flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-slate-700 shrink-0">
+                <h2 class="text-xl font-bold text-white">Documentation</h2>
+                <button id="close-modal"
+                    class="text-slate-400 hover:text-white transition-colors p-1 rounded hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div id="readme-content" class="flex-1 overflow-auto p-6 markdown-body">
+                Loading...
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

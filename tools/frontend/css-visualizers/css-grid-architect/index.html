@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSS Grid Layout Architect</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="../../shared/styles.css">
+    <script src="../../shared/utils.js" defer></script>
     <style>
         /* Custom Scrollbars */
         ::-webkit-scrollbar {
@@ -108,6 +111,15 @@
             CSS Grid Layout Architect
         </h1>
         <div class="flex gap-2">
+            <button id="readme-btn"
+                class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                </svg>
+                README
+            </button>
             <button id="add-item-btn"
                 class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
                 + Add Item
@@ -256,13 +268,24 @@
             <!-- Code Output -->
             <div class="h-48 bg-slate-900 border-t border-slate-800 p-4 flex gap-4 shrink-0">
                 <div class="flex-1 flex flex-col">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase mb-2">Container CSS</h3>
-                    <textarea id="css-output-container" class="flex-1 code-block text-sm resize-none"
-                        readonly></textarea>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase">Container CSS</h3>
+                        <button id="apply-container-css"
+                            class="bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors">
+                            Apply Code
+                        </button>
+                    </div>
+                    <textarea id="css-output-container" class="flex-1 code-block text-sm resize-vertical"></textarea>
                 </div>
                 <div class="flex-1 flex flex-col">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase mb-2">Selected Item CSS</h3>
-                    <textarea id="css-output-item" class="flex-1 code-block text-sm resize-none" readonly></textarea>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase">Selected Item CSS</h3>
+                        <button id="apply-item-css"
+                            class="bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors">
+                            Apply Code
+                        </button>
+                    </div>
+                    <textarea id="css-output-item" class="flex-1 code-block text-sm resize-vertical"></textarea>
                 </div>
             </div>
         </section>
@@ -337,6 +360,10 @@
             // Add/Remove buttons
             document.getElementById('add-item-btn').addEventListener('click', addItem);
             document.getElementById('remove-item-btn').addEventListener('click', removeLastItem);
+
+            // Apply CSS buttons
+            document.getElementById('apply-container-css').addEventListener('click', applyContainerCSS);
+            document.getElementById('apply-item-css').addEventListener('click', applyItemCSS);
         }
 
         function addItem() {
@@ -478,6 +505,52 @@
             document.getElementById('css-output-item').value = css;
         }
 
+        // Apply CSS from edited code blocks
+        function applyContainerCSS() {
+            const css = document.getElementById('css-output-container').value;
+            const parsed = parseCSS(css);
+
+            if (parsed.display) containerControls.display.value = parsed.display;
+            if (parsed['grid-template-columns']) containerControls.cols.value = parsed['grid-template-columns'];
+            if (parsed['grid-template-rows']) containerControls.rows.value = parsed['grid-template-rows'];
+            if (parsed.gap) containerControls.gap.value = parsed.gap;
+            if (parsed['justify-items']) containerControls.justifyItems.value = parsed['justify-items'];
+            if (parsed['align-items']) containerControls.alignItems.value = parsed['align-items'];
+            if (parsed['justify-content']) containerControls.justifyContent.value = parsed['justify-content'];
+            if (parsed['align-content']) containerControls.alignContent.value = parsed['align-content'];
+            if (parsed['grid-auto-flow']) containerControls.autoFlow.value = parsed['grid-auto-flow'];
+
+            updateContainerStyles();
+        }
+
+        function applyItemCSS() {
+            if (!selectedItemId) return;
+
+            const css = document.getElementById('css-output-item').value;
+            const parsed = parseCSS(css);
+
+            if (parsed['grid-column-start']) itemControls.colStart.value = parsed['grid-column-start'];
+            if (parsed['grid-column-end']) itemControls.colEnd.value = parsed['grid-column-end'];
+            if (parsed['grid-row-start']) itemControls.rowStart.value = parsed['grid-row-start'];
+            if (parsed['grid-row-end']) itemControls.rowEnd.value = parsed['grid-row-end'];
+            if (parsed['justify-self']) itemControls.justifySelf.value = parsed['justify-self'];
+            if (parsed['align-self']) itemControls.alignSelf.value = parsed['align-self'];
+
+            updateItemStyles();
+        }
+
+        function parseCSS(css) {
+            const result = {};
+            const lines = css.split('\n');
+            lines.forEach(line => {
+                const match = line.match(/^\s*([a-z-]+):\s*([^;]+);?\s*$/);
+                if (match) {
+                    result[match[1]] = match[2].trim();
+                }
+            });
+            return result;
+        }
+
         // Deselect when clicking background
         document.getElementById('preview-area').addEventListener('click', () => {
             selectedItemId = null;
@@ -487,6 +560,25 @@
 
         init();
     </script>
+
+    <!-- README Modal -->
+    <div id="readme-modal" class="modal-overlay fixed inset-0 hidden flex items-center justify-center z-50">
+        <div class="modal-content w-[800px] h-[600px] rounded-lg flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-slate-700 shrink-0">
+                <h2 class="text-xl font-bold text-white">Documentation</h2>
+                <button id="close-modal"
+                    class="text-slate-400 hover:text-white transition-colors p-1 rounded hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div id="readme-content" class="flex-1 overflow-auto p-6 markdown-body">
+                Loading...
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
