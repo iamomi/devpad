@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Flexbox Playground X</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .control-group {
+            margin-bottom: 1rem;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #94a3b8;
+            margin-bottom: 0.25rem;
+        }
+
+        .control-group select,
+        .control-group input {
+            width: 100%;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        .control-group select:focus,
+        .control-group input:focus {
+            outline: none;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+        }
+
+        .flex-item {
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.25rem;
+            cursor: pointer;
+            min-width: 50px;
+            min-height: 50px;
+        }
+
+        .flex-item.selected {
+            box-shadow: 0 0 0 4px #0ea5e9;
+            z-index: 10;
+        }
+
+        .code-block {
+            font-family: 'Fira Code', monospace;
+            background-color: #1e293b;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #334155;
+            color: #a5b4fc;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body class="h-screen flex flex-col overflow-hidden">
+    <header class="bg-slate-900 border-b border-slate-800 p-4 flex items-center justify-between shrink-0">
+        <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-indigo-400">
+            CSS Flexbox Playground X
+        </h1>
+        <div class="flex gap-2">
+            <button id="add-item-btn"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                + Add Item
+            </button>
+            <button id="remove-item-btn"
+                class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                - Remove Last
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 flex overflow-hidden">
+        <!-- Sidebar: Controls -->
+        <aside class="w-80 bg-slate-900 border-r border-slate-800 overflow-y-auto p-4 shrink-0">
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold text-sky-400 mb-4 border-b border-slate-800 pb-2">Container Controls
+                </h2>
+
+                <div class="control-group">
+                    <label>display</label>
+                    <select id="container-display">
+                        <option value="flex">flex</option>
+                        <option value="inline-flex">inline-flex</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>flex-direction</label>
+                    <select id="container-direction">
+                        <option value="row">row</option>
+                        <option value="row-reverse">row-reverse</option>
+                        <option value="column">column</option>
+                        <option value="column-reverse">column-reverse</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>flex-wrap</label>
+                    <select id="container-wrap">
+                        <option value="nowrap">nowrap</option>
+                        <option value="wrap">wrap</option>
+                        <option value="wrap-reverse">wrap-reverse</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>justify-content</label>
+                    <select id="container-justify">
+                        <option value="flex-start">flex-start</option>
+                        <option value="flex-end">flex-end</option>
+                        <option value="center">center</option>
+                        <option value="space-between">space-between</option>
+                        <option value="space-around">space-around</option>
+                        <option value="space-evenly">space-evenly</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>align-items</label>
+                    <select id="container-align-items">
+                        <option value="stretch">stretch</option>
+                        <option value="flex-start">flex-start</option>
+                        <option value="flex-end">flex-end</option>
+                        <option value="center">center</option>
+                        <option value="baseline">baseline</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>align-content</label>
+                    <select id="container-align-content">
+                        <option value="stretch">stretch</option>
+                        <option value="flex-start">flex-start</option>
+                        <option value="flex-end">flex-end</option>
+                        <option value="center">center</option>
+                        <option value="space-between">space-between</option>
+                        <option value="space-around">space-around</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>gap</label>
+                    <input type="text" id="container-gap" value="10px">
+                </div>
+            </div>
+
+            <div id="item-controls-panel" class="hidden">
+                <h2 class="text-lg font-semibold text-indigo-400 mb-4 border-b border-slate-800 pb-2">
+                    Item #<span id="selected-item-id"></span> Controls
+                </h2>
+                <div class="control-group">
+                    <label>order</label>
+                    <input type="number" id="item-order" value="0">
+                </div>
+                <div class="control-group">
+                    <label>flex-grow</label>
+                    <input type="number" id="item-grow" value="0" min="0" step="0.1">
+                </div>
+                <div class="control-group">
+                    <label>flex-shrink</label>
+                    <input type="number" id="item-shrink" value="1" min="0" step="0.1">
+                </div>
+                <div class="control-group">
+                    <label>flex-basis</label>
+                    <input type="text" id="item-basis" value="auto">
+                </div>
+                <div class="control-group">
+                    <label>align-self</label>
+                    <select id="item-align-self">
+                        <option value="auto">auto</option>
+                        <option value="flex-start">flex-start</option>
+                        <option value="flex-end">flex-end</option>
+                        <option value="center">center</option>
+                        <option value="baseline">baseline</option>
+                        <option value="stretch">stretch</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>width</label>
+                    <input type="text" id="item-width" value="100px">
+                </div>
+                <div class="control-group">
+                    <label>height</label>
+                    <input type="text" id="item-height" value="100px">
+                </div>
+            </div>
+            <div id="no-item-selected" class="text-slate-500 text-sm italic text-center py-4">
+                Click an item to edit its properties
+            </div>
+        </aside>
+
+        <!-- Main Preview Area -->
+        <section class="flex-1 flex flex-col min-w-0">
+            <div class="flex-1 bg-slate-950 p-8 overflow-auto relative" id="preview-area">
+                <div id="flex-container"
+                    class="bg-slate-800 border-2 border-dashed border-slate-600 min-h-[400px] transition-all duration-300">
+                    <!-- Items will be injected here -->
+                </div>
+            </div>
+
+            <!-- Code Output -->
+            <div class="h-48 bg-slate-900 border-t border-slate-800 p-4 flex gap-4 shrink-0">
+                <div class="flex-1 flex flex-col">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase mb-2">Container CSS</h3>
+                    <textarea id="css-output-container" class="flex-1 code-block text-sm resize-none"
+                        readonly></textarea>
+                </div>
+                <div class="flex-1 flex flex-col">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase mb-2">Selected Item CSS</h3>
+                    <textarea id="css-output-item" class="flex-1 code-block text-sm resize-none" readonly></textarea>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const container = document.getElementById('flex-container');
+        const itemControlsPanel = document.getElementById('item-controls-panel');
+        const noItemSelectedMsg = document.getElementById('no-item-selected');
+        const selectedItemIdSpan = document.getElementById('selected-item-id');
+
+        // State
+        let items = [
+            { id: 1, styles: { width: '100px', height: '100px' } },
+            { id: 2, styles: { width: '100px', height: '100px' } },
+            { id: 3, styles: { width: '100px', height: '100px' } }
+        ];
+        let selectedItemId = null;
+
+        // Colors for items
+        const colors = [
+            'bg-red-500', 'bg-orange-500', 'bg-amber-500', 'bg-yellow-500',
+            'bg-lime-500', 'bg-green-500', 'bg-emerald-500', 'bg-teal-500',
+            'bg-cyan-500', 'bg-sky-500', 'bg-blue-500', 'bg-indigo-500',
+            'bg-violet-500', 'bg-purple-500', 'bg-fuchsia-500', 'bg-pink-500', 'bg-rose-500'
+        ];
+
+        // DOM Elements for Container Controls
+        const containerControls = {
+            display: document.getElementById('container-display'),
+            direction: document.getElementById('container-direction'),
+            wrap: document.getElementById('container-wrap'),
+            justify: document.getElementById('container-justify'),
+            alignItems: document.getElementById('container-align-items'),
+            alignContent: document.getElementById('container-align-content'),
+            gap: document.getElementById('container-gap')
+        };
+
+        // DOM Elements for Item Controls
+        const itemControls = {
+            order: document.getElementById('item-order'),
+            grow: document.getElementById('item-grow'),
+            shrink: document.getElementById('item-shrink'),
+            basis: document.getElementById('item-basis'),
+            alignSelf: document.getElementById('item-align-self'),
+            width: document.getElementById('item-width'),
+            height: document.getElementById('item-height')
+        };
+
+        // Initialize
+        function init() {
+            renderItems();
+            updateContainerStyles();
+            setupEventListeners();
+        }
+
+        function setupEventListeners() {
+            // Container inputs
+            Object.values(containerControls).forEach(input => {
+                input.addEventListener('input', updateContainerStyles);
+            });
+
+            // Item inputs
+            Object.values(itemControls).forEach(input => {
+                input.addEventListener('input', updateItemStyles);
+            });
+
+            // Add/Remove buttons
+            document.getElementById('add-item-btn').addEventListener('click', addItem);
+            document.getElementById('remove-item-btn').addEventListener('click', removeLastItem);
+        }
+
+        function addItem() {
+            const newId = items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1;
+            items.push({ id: newId, styles: { width: '100px', height: '100px' } });
+            renderItems();
+        }
+
+        function removeLastItem() {
+            if (items.length === 0) return;
+            const removed = items.pop();
+            if (selectedItemId === removed.id) {
+                selectedItemId = null;
+                updateSelectionUI();
+            }
+            renderItems();
+        }
+
+        function renderItems() {
+            container.innerHTML = '';
+            items.forEach((item, index) => {
+                const el = document.createElement('div');
+                el.className = `flex-item ${colors[index % colors.length]} text-white shadow-md rounded-md ${selectedItemId === item.id ? 'selected' : ''}`;
+                el.textContent = item.id;
+                el.dataset.id = item.id;
+
+                // Apply stored inline styles
+                Object.assign(el.style, item.styles);
+
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectItem(item.id);
+                });
+
+                container.appendChild(el);
+            });
+        }
+
+        function selectItem(id) {
+            selectedItemId = id;
+            updateSelectionUI();
+
+            // Populate controls with current item values
+            const item = items.find(i => i.id === id);
+            if (item) {
+                const s = item.styles;
+                itemControls.order.value = s.order || 0;
+                itemControls.grow.value = s.flexGrow || 0;
+                itemControls.shrink.value = s.flexShrink || 1;
+                itemControls.basis.value = s.flexBasis || 'auto';
+                itemControls.alignSelf.value = s.alignSelf || 'auto';
+                itemControls.width.value = s.width || '100px';
+                itemControls.height.value = s.height || '100px';
+
+                updateItemCSSOutput(item);
+            }
+
+            renderItems(); // Re-render to show selection highlight
+        }
+
+        function updateSelectionUI() {
+            if (selectedItemId) {
+                itemControlsPanel.classList.remove('hidden');
+                noItemSelectedMsg.classList.add('hidden');
+                selectedItemIdSpan.textContent = selectedItemId;
+            } else {
+                itemControlsPanel.classList.add('hidden');
+                noItemSelectedMsg.classList.remove('hidden');
+                document.getElementById('css-output-item').value = '/* Select an item to view its CSS */';
+            }
+        }
+
+        function updateContainerStyles() {
+            const styles = {
+                display: containerControls.display.value,
+                flexDirection: containerControls.direction.value,
+                flexWrap: containerControls.wrap.value,
+                justifyContent: containerControls.justify.value,
+                alignItems: containerControls.alignItems.value,
+                alignContent: containerControls.alignContent.value,
+                gap: containerControls.gap.value
+            };
+
+            Object.assign(container.style, styles);
+
+            // Generate CSS Output
+            const css = `.container {
+    display: ${styles.display};
+    flex-direction: ${styles.flexDirection};
+    flex-wrap: ${styles.flexWrap};
+    justify-content: ${styles.justifyContent};
+    align-items: ${styles.alignItems};
+    align-content: ${styles.alignContent};
+    gap: ${styles.gap};
+}`;
+            document.getElementById('css-output-container').value = css;
+        }
+
+        function updateItemStyles() {
+            if (!selectedItemId) return;
+
+            const item = items.find(i => i.id === selectedItemId);
+            if (!item) return;
+
+            const styles = {
+                order: itemControls.order.value,
+                flexGrow: itemControls.grow.value,
+                flexShrink: itemControls.shrink.value,
+                flexBasis: itemControls.basis.value,
+                alignSelf: itemControls.alignSelf.value,
+                width: itemControls.width.value,
+                height: itemControls.height.value
+            };
+
+            // Update state
+            Object.assign(item.styles, styles);
+
+            // Update DOM
+            const el = container.querySelector(`[data-id="${selectedItemId}"]`);
+            if (el) {
+                Object.assign(el.style, styles);
+            }
+
+            updateItemCSSOutput(item);
+        }
+
+        function updateItemCSSOutput(item) {
+            const s = item.styles;
+            const css = `.item-${item.id} {
+    order: ${s.order || 0};
+    flex-grow: ${s.flexGrow || 0};
+    flex-shrink: ${s.flexShrink || 1};
+    flex-basis: ${s.flexBasis || 'auto'};
+    align-self: ${s.alignSelf || 'auto'};
+    width: ${s.width || 'auto'};
+    height: ${s.height || 'auto'};
+}`;
+            document.getElementById('css-output-item').value = css;
+        }
+
+        // Deselect when clicking background
+        document.getElementById('preview-area').addEventListener('click', () => {
+            selectedItemId = null;
+            updateSelectionUI();
+            renderItems();
+        });
+
+        init();
+    </script>
+</body>
+
+</html>

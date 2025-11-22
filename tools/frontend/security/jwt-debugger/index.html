@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Debugger & Decoder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .jwt-part {
+            font-family: 'Fira Code', monospace;
+            word-break: break-all;
+        }
+
+        .jwt-header {
+            color: #f43f5e;
+        }
+
+        .jwt-payload {
+            color: #d946ef;
+        }
+
+        .jwt-signature {
+            color: #0ea5e9;
+        }
+
+        .json-block {
+            font-family: 'Fira Code', monospace;
+            background-color: #1e293b;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            white-space: pre-wrap;
+            font-size: 0.875rem;
+        }
+
+        input,
+        textarea {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            width: 100%;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+        }
+    </style>
+</head>
+
+<body class="h-screen flex flex-col overflow-hidden">
+    <header class="bg-slate-900 border-b border-slate-800 p-4 flex items-center justify-between shrink-0">
+        <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
+            JWT Debugger & Decoder
+        </h1>
+        <div id="status-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-400">
+            Waiting for input...
+        </div>
+    </header>
+
+    <main class="flex-1 flex overflow-hidden">
+        <!-- Left: Input -->
+        <section class="w-1/2 flex flex-col border-r border-slate-800 p-6 overflow-y-auto bg-slate-950">
+            <div class="mb-6">
+                <label class="block text-sm font-bold text-slate-400 mb-2">Encoded Token</label>
+                <textarea id="jwt-input" rows="8" class="font-mono text-sm"
+                    placeholder="Paste your JWT here..."></textarea>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-bold text-slate-400 mb-2">Verify Signature (HMAC-SHA256)</label>
+                <div class="relative">
+                    <input type="text" id="secret-input" placeholder="your-256-bit-secret"
+                        class="font-mono text-sm pr-24">
+                    <div
+                        class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-500 bg-slate-800 px-2 py-1 rounded">
+                        HS256
+                    </div>
+                </div>
+                <p class="text-xs text-slate-500 mt-2">
+                    Enter the secret to verify the signature. Currently supports HS256.
+                </p>
+            </div>
+
+            <div class="mt-auto bg-slate-900 p-4 rounded border border-slate-800">
+                <h3 class="text-sm font-bold text-slate-300 mb-2">Color Legend</h3>
+                <div class="flex gap-4 text-xs font-mono">
+                    <span class="text-rose-500">Header</span>
+                    <span class="text-fuchsia-500">Payload</span>
+                    <span class="text-sky-500">Signature</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right: Decoded -->
+        <section class="w-1/2 flex flex-col p-6 overflow-y-auto bg-slate-900">
+            <div class="space-y-6">
+                <!-- Header -->
+                <div>
+                    <h2 class="text-sm font-bold text-rose-400 mb-2 uppercase">Header</h2>
+                    <div id="output-header" class="json-block text-rose-200">{}</div>
+                </div>
+
+                <!-- Payload -->
+                <div>
+                    <h2 class="text-sm font-bold text-fuchsia-400 mb-2 uppercase">Payload</h2>
+                    <div id="output-payload" class="json-block text-fuchsia-200">{}</div>
+                </div>
+
+                <!-- Meta Info -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-800 p-3 rounded border border-slate-700">
+                        <div class="text-xs text-slate-500 uppercase font-bold mb-1">Issued At (iat)</div>
+                        <div id="meta-iat" class="text-sm text-slate-300">-</div>
+                    </div>
+                    <div class="bg-slate-800 p-3 rounded border border-slate-700">
+                        <div class="text-xs text-slate-500 uppercase font-bold mb-1">Expiration (exp)</div>
+                        <div id="meta-exp" class="text-sm text-slate-300">-</div>
+                    </div>
+                </div>
+
+                <!-- Signature -->
+                <div>
+                    <h2 class="text-sm font-bold text-sky-400 mb-2 uppercase">Signature</h2>
+                    <div id="output-signature" class="json-block text-sky-200 text-xs break-all"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const jwtInput = document.getElementById('jwt-input');
+        const secretInput = document.getElementById('secret-input');
+        const outputHeader = document.getElementById('output-header');
+        const outputPayload = document.getElementById('output-payload');
+        const outputSignature = document.getElementById('output-signature');
+        const metaIat = document.getElementById('meta-iat');
+        const metaExp = document.getElementById('meta-exp');
+        const statusBadge = document.getElementById('status-badge');
+
+        jwtInput.addEventListener('input', update);
+        secretInput.addEventListener('input', update);
+
+        async function update() {
+            const token = jwtInput.value.trim();
+            if (!token) {
+                resetUI();
+                return;
+            }
+
+            const parts = token.split('.');
+            if (parts.length !== 3) {
+                setStatus('Invalid Token Format', 'bg-rose-900 text-rose-200');
+                return;
+            }
+
+            try {
+                // Decode Header
+                const header = JSON.parse(atobUrl(parts[0]));
+                outputHeader.textContent = JSON.stringify(header, null, 2);
+
+                // Decode Payload
+                const payload = JSON.parse(atobUrl(parts[1]));
+                outputPayload.textContent = JSON.stringify(payload, null, 2);
+
+                // Signature (raw hex)
+                outputSignature.textContent = parts[2];
+
+                // Meta
+                updateMeta(payload);
+
+                // Verify
+                if (secretInput.value) {
+                    await verifySignature(parts[0], parts[1], parts[2], secretInput.value);
+                } else {
+                    setStatus('Token Decoded (Signature Unverified)', 'bg-yellow-900 text-yellow-200');
+                }
+
+            } catch (e) {
+                console.error(e);
+                setStatus('Error Decoding Token', 'bg-rose-900 text-rose-200');
+            }
+        }
+
+        function atobUrl(str) {
+            str = str.replace(/-/g, '+').replace(/_/g, '/');
+            while (str.length % 4) {
+                str += '=';
+            }
+            return atob(str);
+        }
+
+        function updateMeta(payload) {
+            if (payload.iat) {
+                metaIat.textContent = new Date(payload.iat * 1000).toLocaleString();
+            } else {
+                metaIat.textContent = '-';
+            }
+
+            if (payload.exp) {
+                const expDate = new Date(payload.exp * 1000);
+                const isExpired = expDate < new Date();
+                metaExp.innerHTML = `
+                    ${expDate.toLocaleString()} 
+                    <span class="ml-2 px-1.5 py-0.5 rounded text-[10px] font-bold ${isExpired ? 'bg-rose-900 text-rose-200' : 'bg-emerald-900 text-emerald-200'}">
+                        ${isExpired ? 'EXPIRED' : 'VALID'}
+                    </span>
+                `;
+            } else {
+                metaExp.textContent = '-';
+            }
+        }
+
+        async function verifySignature(headerB64, payloadB64, signatureB64, secret) {
+            try {
+                const encoder = new TextEncoder();
+                const keyData = encoder.encode(secret);
+                const key = await crypto.subtle.importKey(
+                    'raw',
+                    keyData,
+                    { name: 'HMAC', hash: 'SHA-256' },
+                    false,
+                    ['verify']
+                );
+
+                const data = encoder.encode(`${headerB64}.${payloadB64}`);
+                const signature = base64UrlToUint8Array(signatureB64);
+
+                const isValid = await crypto.subtle.verify(
+                    'HMAC',
+                    key,
+                    signature,
+                    data
+                );
+
+                if (isValid) {
+                    setStatus('Signature Verified', 'bg-emerald-900 text-emerald-200');
+                } else {
+                    setStatus('Invalid Signature', 'bg-rose-900 text-rose-200');
+                }
+            } catch (e) {
+                console.error(e);
+                setStatus('Verification Error', 'bg-rose-900 text-rose-200');
+            }
+        }
+
+        function base64UrlToUint8Array(base64Url) {
+            const padding = '='.repeat((4 - base64Url.length % 4) % 4);
+            const base64 = (base64Url + padding)
+                .replace(/-/g, '+')
+                .replace(/_/g, '/');
+            const rawData = atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+        function setStatus(text, classes) {
+            statusBadge.className = `px-3 py-1 rounded-full text-xs font-bold ${classes}`;
+            statusBadge.textContent = text;
+        }
+
+        function resetUI() {
+            outputHeader.textContent = '{}';
+            outputPayload.textContent = '{}';
+            outputSignature.textContent = '';
+            metaIat.textContent = '-';
+            metaExp.textContent = '-';
+            setStatus('Waiting for input...', 'bg-slate-800 text-slate-400');
+        }
+    </script>
+</body>
+
+</html>

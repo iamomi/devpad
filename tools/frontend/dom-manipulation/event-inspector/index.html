@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Event Inspector Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .event-box {
+            border: 2px solid;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .event-box:hover {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .event-box::after {
+            content: attr(id);
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        #grandparent {
+            border-color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        #parent {
+            border-color: #eab308;
+            background-color: rgba(234, 179, 8, 0.1);
+        }
+
+        #child {
+            border-color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .log-entry {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            border-bottom: 1px solid #334155;
+            padding: 0.5rem;
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 0.5rem;
+        }
+
+        .log-entry:hover {
+            background-color: #1e293b;
+        }
+
+        .log-phase-capture {
+            color: #f472b6;
+        }
+
+        .log-phase-target {
+            color: #22d3ee;
+            font-weight: bold;
+        }
+
+        .log-phase-bubble {
+            color: #a78bfa;
+        }
+
+        .highlight-flash {
+            animation: flash 0.5s ease-out;
+        }
+
+        @keyframes flash {
+            0% {
+                background-color: rgba(255, 255, 255, 0.4);
+            }
+
+            100% {
+                background-color: transparent;
+            }
+        }
+    </style>
+</head>
+
+<body class="h-screen flex flex-col overflow-hidden">
+    <header class="bg-slate-900 border-b border-slate-800 p-4 flex items-center justify-between shrink-0">
+        <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+            Advanced Event Inspector Pro
+        </h1>
+        <div class="flex gap-2">
+            <button id="clear-log-btn"
+                class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded text-sm">Clear Log</button>
+        </div>
+    </header>
+
+    <main class="flex-1 flex overflow-hidden">
+        <!-- Sidebar: Configuration -->
+        <aside class="w-80 bg-slate-900 border-r border-slate-800 overflow-y-auto p-4 shrink-0">
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold text-purple-400 mb-4 border-b border-slate-800 pb-2">Event Listeners
+                </h2>
+                <p class="text-xs text-slate-500 mb-4">Toggle listeners for each element and phase.</p>
+
+                <div class="space-y-4">
+                    <!-- Grandparent Controls -->
+                    <div class="bg-slate-800 p-3 rounded border border-slate-700">
+                        <h3 class="font-bold text-red-400 mb-2">Grandparent</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center text-sm">
+                                <input type="checkbox" class="listener-toggle mr-2" data-target="grandparent"
+                                    data-phase="capture"> Capture
+                            </label>
+                            <label class="flex items-center text-sm">
+                                <input type="checkbox" class="listener-toggle mr-2" data-target="grandparent"
+                                    data-phase="bubble"> Bubble
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Parent Controls -->
+                    <div class="bg-slate-800 p-3 rounded border border-slate-700">
+                        <h3 class="font-bold text-yellow-400 mb-2">Parent</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center text-sm">
+                                <input type="checkbox" class="listener-toggle mr-2" data-target="parent"
+                                    data-phase="capture"> Capture
+                            </label>
+                            <label class="flex items-center text-sm">
+                                <input type="checkbox" class="listener-toggle mr-2" data-target="parent"
+                                    data-phase="bubble"> Bubble
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Child Controls -->
+                    <div class="bg-slate-800 p-3 rounded border border-slate-700">
+                        <h3 class="font-bold text-blue-400 mb-2">Child</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center text-sm">
+                                <input type="checkbox" class="listener-toggle mr-2" data-target="child"
+                                    data-phase="capture"> Capture
+                            </label>
+                            <label class="flex items-center text-sm">
+                                <input type="checkbox" class="listener-toggle mr-2" data-target="child"
+                                    data-phase="bubble"> Bubble
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold text-purple-400 mb-4 border-b border-slate-800 pb-2">Event Settings
+                </h2>
+                <div class="space-y-2">
+                    <label class="block text-sm">Event Type</label>
+                    <select id="event-type-select"
+                        class="w-full bg-slate-800 border border-slate-700 rounded p-1 text-sm">
+                        <option value="click">click</option>
+                        <option value="mousedown">mousedown</option>
+                        <option value="mouseup">mouseup</option>
+                        <option value="mouseover">mouseover</option>
+                        <option value="mouseout">mouseout</option>
+                        <option value="dblclick">dblclick</option>
+                    </select>
+                </div>
+                <div class="mt-4 space-y-2">
+                    <label class="flex items-center text-sm">
+                        <input type="checkbox" id="stop-prop-checkbox" class="mr-2"> Stop Propagation
+                    </label>
+                    <label class="flex items-center text-sm">
+                        <input type="checkbox" id="prevent-default-checkbox" class="mr-2"> Prevent Default
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Area -->
+        <section class="flex-1 flex flex-col min-w-0">
+            <!-- Interactive Area -->
+            <div class="flex-1 bg-slate-950 p-8 flex items-center justify-center">
+                <div id="grandparent" class="event-box w-full max-w-2xl h-96 flex items-center justify-center">
+                    <div id="parent" class="event-box w-3/4 h-3/4 flex items-center justify-center">
+                        <div id="child" class="event-box w-1/2 h-1/2 flex items-center justify-center">
+                            <span class="pointer-events-none font-bold text-slate-500">Click Me!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Log Panel -->
+            <div class="h-64 bg-slate-900 border-t border-slate-800 flex flex-col shrink-0">
+                <div
+                    class="p-2 bg-slate-800 border-b border-slate-700 flex justify-between text-xs font-bold text-slate-400 uppercase">
+                    <span>Event Log</span>
+                    <div class="flex gap-4">
+                        <span class="text-pink-400">● Capture</span>
+                        <span class="text-cyan-400">● Target</span>
+                        <span class="text-violet-400">● Bubble</span>
+                    </div>
+                </div>
+                <div id="log-container" class="flex-1 overflow-y-auto p-0">
+                    <!-- Logs go here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const elements = {
+            grandparent: document.getElementById('grandparent'),
+            parent: document.getElementById('parent'),
+            child: document.getElementById('child')
+        };
+        const logContainer = document.getElementById('log-container');
+        const eventTypeSelect = document.getElementById('event-type-select');
+        const stopPropCheckbox = document.getElementById('stop-prop-checkbox');
+        const preventDefaultCheckbox = document.getElementById('prevent-default-checkbox');
+
+        let currentEventType = 'click';
+        let listeners = [];
+
+        // Initialize
+        function init() {
+            setupControls();
+            // Default enable all click listeners
+            document.querySelectorAll('.listener-toggle').forEach(cb => {
+                cb.checked = true;
+                updateListener(cb);
+            });
+        }
+
+        function setupControls() {
+            // Listener Toggles
+            document.querySelectorAll('.listener-toggle').forEach(cb => {
+                cb.addEventListener('change', () => updateListener(cb));
+            });
+
+            // Event Type Change
+            eventTypeSelect.addEventListener('change', (e) => {
+                const newType = e.target.value;
+                // Remove old listeners
+                document.querySelectorAll('.listener-toggle').forEach(cb => {
+                    if (cb.checked) removeListener(cb.dataset.target, cb.dataset.phase, currentEventType);
+                });
+                currentEventType = newType;
+                // Add new listeners
+                document.querySelectorAll('.listener-toggle').forEach(cb => {
+                    if (cb.checked) addListener(cb.dataset.target, cb.dataset.phase, currentEventType);
+                });
+            });
+
+            // Clear Log
+            document.getElementById('clear-log-btn').addEventListener('click', () => {
+                logContainer.innerHTML = '';
+            });
+        }
+
+        function updateListener(checkbox) {
+            const target = checkbox.dataset.target;
+            const phase = checkbox.dataset.phase;
+            if (checkbox.checked) {
+                addListener(target, phase, currentEventType);
+            } else {
+                removeListener(target, phase, currentEventType);
+            }
+        }
+
+        function addListener(targetId, phase, type) {
+            const element = elements[targetId];
+            const useCapture = phase === 'capture';
+
+            const handler = (e) => handleEvent(e, targetId, phase);
+
+            // Store handler reference to remove later
+            // Using a simple key for this demo
+            element.addEventListener(type, handler, useCapture);
+
+            // Store in a way we can retrieve (simplified for this demo, assuming one handler per type/phase/target)
+            element[`_handler_${type}_${phase}`] = handler;
+        }
+
+        function removeListener(targetId, phase, type) {
+            const element = elements[targetId];
+            const useCapture = phase === 'capture';
+            const handler = element[`_handler_${type}_${phase}`];
+
+            if (handler) {
+                element.removeEventListener(type, handler, useCapture);
+                delete element[`_handler_${type}_${phase}`];
+            }
+        }
+
+        function handleEvent(e, currentTargetId, phase) {
+            // Visual feedback
+            const el = elements[currentTargetId];
+            el.classList.add('highlight-flash');
+            setTimeout(() => el.classList.remove('highlight-flash'), 500);
+
+            // Determine actual phase name
+            let phaseName = 'bubble';
+            let phaseClass = 'log-phase-bubble';
+
+            if (e.eventPhase === Event.CAPTURING_PHASE) {
+                phaseName = 'capture';
+                phaseClass = 'log-phase-capture';
+            } else if (e.eventPhase === Event.AT_TARGET) {
+                phaseName = 'target';
+                phaseClass = 'log-phase-target';
+            }
+
+            // Log
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+
+            const time = new Date().toLocaleTimeString() + '.' + new Date().getMilliseconds().toString().padStart(3, '0');
+
+            entry.innerHTML = `
+                <div class="text-slate-500">${time}</div>
+                <div>
+                    <span class="${phaseClass} uppercase text-xs font-bold mr-2">[${phaseName}]</span>
+                    <span class="text-slate-300 font-bold">${currentTargetId}</span>
+                    <span class="text-slate-500 mx-1">received</span>
+                    <span class="text-purple-300">${e.type}</span>
+                    <div class="text-xs text-slate-500 mt-1">
+                        Target: <span class="text-slate-400">${e.target.id}</span> | 
+                        Bubbles: ${e.bubbles} | 
+                        Cancelable: ${e.cancelable}
+                    </div>
+                </div>
+            `;
+
+            // Prepend to log (newest first)
+            logContainer.insertBefore(entry, logContainer.firstChild);
+
+            // Apply user settings
+            if (stopPropCheckbox.checked) {
+                e.stopPropagation();
+                entry.querySelector('div > div').innerHTML += ' <span class="text-red-500 font-bold ml-2">STOPPED</span>';
+            }
+            if (preventDefaultCheckbox.checked) {
+                e.preventDefault();
+                entry.querySelector('div > div').innerHTML += ' <span class="text-orange-500 font-bold ml-2">PREVENTED</span>';
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

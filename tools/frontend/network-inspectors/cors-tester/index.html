@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS & HTTP Headers Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .code-block {
+            font-family: 'Fira Code', monospace;
+            background-color: #1e293b;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #334155;
+            color: #a5b4fc;
+            white-space: pre-wrap;
+            font-size: 0.875rem;
+        }
+
+        .header-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 40px;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        input,
+        select,
+        textarea {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            width: 100%;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border-bottom: 2px solid transparent;
+            color: #94a3b8;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #0ea5e9;
+            border-bottom-color: #0ea5e9;
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+
+<body class="h-screen flex flex-col overflow-hidden">
+    <header class="bg-slate-900 border-b border-slate-800 p-4 flex items-center justify-between shrink-0">
+        <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
+            CORS & HTTP Headers Simulator
+        </h1>
+        <div class="flex gap-2">
+            <button id="send-req-btn"
+                class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-md text-sm font-bold transition-colors flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                    <path
+                        d="M3.105 2.289a.75.75 0 00-.826.95l1.414 4.925A1.5 1.5 0 005.135 9.25h6.115a.75.75 0 010 1.5H5.135a1.5 1.5 0 00-1.442 1.086l-1.414 4.926a.75.75 0 00.826.95 28.896 28.896 0 0015.293-7.154.75.75 0 000-1.115A28.897 28.897 0 003.105 2.289z" />
+                </svg>
+                Send Request
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 flex overflow-hidden">
+        <!-- Left Panel: Request Configuration -->
+        <section class="w-1/2 flex flex-col border-r border-slate-800 bg-slate-950">
+            <div class="flex border-b border-slate-800">
+                <button class="tab-btn active w-1/2" data-tab="req-config">Request Config</button>
+                <button class="tab-btn w-1/2" data-tab="mock-response">Mock Response</button>
+            </div>
+
+            <div id="req-config-panel" class="flex-1 overflow-y-auto p-6 space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-2">Target URL</label>
+                    <div class="flex gap-2">
+                        <select id="req-method" class="w-24 font-bold text-orange-400">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="DELETE">DELETE</option>
+                            <option value="OPTIONS">OPTIONS</option>
+                            <option value="HEAD">HEAD</option>
+                            <option value="PATCH">PATCH</option>
+                        </select>
+                        <input type="text" id="req-url" placeholder="https://api.example.com/data"
+                            value="https://jsonplaceholder.typicode.com/posts/1">
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm font-medium text-slate-400">Request Headers</label>
+                        <button id="add-header-btn" class="text-xs text-sky-400 hover:text-sky-300">+ Add
+                            Header</button>
+                    </div>
+                    <div id="req-headers-container" class="space-y-2">
+                        <!-- Headers injected here -->
+                        <div class="header-row">
+                            <input type="text" placeholder="Key" value="Content-Type">
+                            <input type="text" placeholder="Value" value="application/json">
+                            <button class="text-slate-500 hover:text-rose-500"
+                                onclick="this.parentElement.remove()">×</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-2">Request Body (JSON)</label>
+                    <textarea id="req-body" rows="6" class="font-mono text-xs">
+{
+  "title": "foo",
+  "body": "bar",
+  "userId": 1
+}</textarea>
+                </div>
+
+                <div class="bg-slate-900 p-4 rounded border border-slate-800">
+                    <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="use-simulation-mode" class="accent-orange-500" checked>
+                        <span><strong>Simulation Mode</strong> (Don't send real request, just show Mock Response)</span>
+                    </label>
+                    <p class="text-xs text-slate-500 mt-2 ml-6">
+                        If unchecked, browser will attempt a real `fetch()`. Note that many APIs will block cross-origin
+                        requests unless they support CORS.
+                    </p>
+                </div>
+            </div>
+
+            <div id="mock-response-panel" class="hidden flex-1 overflow-y-auto p-6 space-y-6">
+                <div class="bg-slate-900 p-4 rounded border border-slate-800 mb-4">
+                    <p class="text-sm text-slate-400">
+                        Configure what the "Server" should return in Simulation Mode. This helps visualize how headers
+                        look.
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-2">Response Status</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="mock-status" value="200" class="w-24">
+                        <input type="text" id="mock-status-text" value="OK" class="flex-1">
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm font-medium text-slate-400">Response Headers</label>
+                        <button id="add-mock-header-btn" class="text-xs text-sky-400 hover:text-sky-300">+ Add
+                            Header</button>
+                    </div>
+                    <div id="mock-headers-container" class="space-y-2">
+                        <div class="header-row">
+                            <input type="text" placeholder="Key" value="Access-Control-Allow-Origin">
+                            <input type="text" placeholder="Value" value="*">
+                            <button class="text-slate-500 hover:text-rose-500"
+                                onclick="this.parentElement.remove()">×</button>
+                        </div>
+                        <div class="header-row">
+                            <input type="text" placeholder="Key" value="Content-Type">
+                            <input type="text" placeholder="Value" value="application/json; charset=utf-8">
+                            <button class="text-slate-500 hover:text-rose-500"
+                                onclick="this.parentElement.remove()">×</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-2">Response Body</label>
+                    <textarea id="mock-body" rows="6" class="font-mono text-xs">
+{
+  "success": true,
+  "message": "This is a mocked response."
+}</textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Panel: Output -->
+        <section class="w-1/2 bg-slate-900 flex flex-col">
+            <div class="p-4 border-b border-slate-800">
+                <h2 class="font-bold text-slate-300">Exchange Log</h2>
+            </div>
+            <div id="output-log" class="flex-1 overflow-y-auto p-6 space-y-8">
+                <div class="text-center text-slate-500 mt-20 italic">
+                    Configure request and click "Send Request"
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Tabs
+        const tabs = document.querySelectorAll('.tab-btn');
+        const panels = {
+            'req-config': document.getElementById('req-config-panel'),
+            'mock-response': document.getElementById('mock-response-panel')
+        };
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                Object.values(panels).forEach(p => p.classList.add('hidden'));
+                panels[tab.dataset.tab].classList.remove('hidden');
+            });
+        });
+
+        // Dynamic Headers
+        function createHeaderRow(containerId, key = '', value = '') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = 'header-row';
+            div.innerHTML = `
+                <input type="text" placeholder="Key" value="${key}">
+                <input type="text" placeholder="Value" value="${value}">
+                <button class="text-slate-500 hover:text-rose-500" onclick="this.parentElement.remove()">×</button>
+            `;
+            container.appendChild(div);
+        }
+
+        document.getElementById('add-header-btn').addEventListener('click', () => createHeaderRow('req-headers-container'));
+        document.getElementById('add-mock-header-btn').addEventListener('click', () => createHeaderRow('mock-headers-container'));
+
+        // Send Request Logic
+        document.getElementById('send-req-btn').addEventListener('click', async () => {
+            const log = document.getElementById('output-log');
+            if (log.querySelector('.text-center')) log.innerHTML = '';
+
+            const method = document.getElementById('req-method').value;
+            const url = document.getElementById('req-url').value;
+            const body = document.getElementById('req-body').value;
+            const isSimulation = document.getElementById('use-simulation-mode').checked;
+
+            // Collect Req Headers
+            const reqHeaders = {};
+            document.querySelectorAll('#req-headers-container .header-row').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0].value) reqHeaders[inputs[0].value] = inputs[1].value;
+            });
+
+            // Create Log Entry Container
+            const entryId = 'entry-' + Date.now();
+            const entry = document.createElement('div');
+            entry.className = 'bg-slate-950 rounded-lg border border-slate-800 overflow-hidden';
+            entry.innerHTML = `
+                <div class="bg-slate-800 p-3 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold text-orange-400">${method}</span>
+                        <span class="text-slate-300 text-sm truncate max-w-xs" title="${url}">${url}</span>
+                    </div>
+                    <span class="text-xs text-slate-500">${isSimulation ? 'SIMULATED' : 'REAL'}</span>
+                </div>
+                <div class="p-4 space-y-4">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-500 uppercase mb-1">Request Headers</h4>
+                        <pre class="text-xs text-sky-300 font-mono">${Object.entries(reqHeaders).map(([k, v]) => `${k}: ${v}`).join('\\n') || '(none)'}</pre>
+                    </div>
+                    ${['POST', 'PUT', 'PATCH'].includes(method) ? `
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-500 uppercase mb-1">Request Body</h4>
+                        <pre class="text-xs text-slate-400 font-mono overflow-x-auto">${body}</pre>
+                    </div>` : ''}
+                    
+                    <div class="border-t border-slate-800 pt-4">
+                        <h4 class="text-xs font-bold text-slate-500 uppercase mb-1">Response</h4>
+                        <div id="${entryId}-response" class="text-sm text-slate-400 italic">Waiting...</div>
+                    </div>
+                </div>
+            `;
+            log.prepend(entry);
+
+            if (isSimulation) {
+                // Simulate delay
+                setTimeout(() => {
+                    const status = document.getElementById('mock-status').value;
+                    const statusText = document.getElementById('mock-status-text').value;
+                    const mockBody = document.getElementById('mock-body').value;
+
+                    const mockHeaders = {};
+                    document.querySelectorAll('#mock-headers-container .header-row').forEach(row => {
+                        const inputs = row.querySelectorAll('input');
+                        if (inputs[0].value) mockHeaders[inputs[0].value] = inputs[1].value;
+                    });
+
+                    renderResponse(entryId, {
+                        status,
+                        statusText,
+                        headers: mockHeaders,
+                        body: mockBody
+                    });
+                }, 600);
+            } else {
+                try {
+                    const options = {
+                        method,
+                        headers: reqHeaders
+                    };
+                    if (['POST', 'PUT', 'PATCH'].includes(method)) {
+                        options.body = body;
+                    }
+
+                    const res = await fetch(url, options);
+
+                    const resHeaders = {};
+                    res.headers.forEach((v, k) => resHeaders[k] = v);
+
+                    const resText = await res.text();
+
+                    renderResponse(entryId, {
+                        status: res.status,
+                        statusText: res.statusText,
+                        headers: resHeaders,
+                        body: resText
+                    });
+
+                } catch (err) {
+                    renderError(entryId, err);
+                }
+            }
+        });
+
+        function renderResponse(entryId, data) {
+            const container = document.getElementById(`${entryId}-response`);
+            const statusColor = data.status >= 200 && data.status < 300 ? 'text-emerald-400' :
+                data.status >= 300 && data.status < 400 ? 'text-blue-400' :
+                    'text-rose-400';
+
+            // Highlight CORS headers
+            const headerHtml = Object.entries(data.headers).map(([k, v]) => {
+                const isCors = k.toLowerCase().startsWith('access-control-');
+                return `<span class="${isCors ? 'text-amber-300 font-bold' : ''}">${k}: ${v}</span>`;
+            }).join('\\n');
+
+            container.className = ''; // Remove italic/waiting styles
+            container.innerHTML = `
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="font-bold ${statusColor}">${data.status} ${data.statusText}</span>
+                </div>
+                <div class="mb-3">
+                    <h5 class="text-[10px] font-bold text-slate-600 uppercase mb-1">Headers</h5>
+                    <pre class="text-xs text-slate-300 font-mono">${headerHtml || '(none)'}</pre>
+                </div>
+                <div>
+                    <h5 class="text-[10px] font-bold text-slate-600 uppercase mb-1">Body</h5>
+                    <pre class="text-xs text-slate-400 font-mono overflow-x-auto max-h-40">${escapeHtml(data.body)}</pre>
+                </div>
+            `;
+        }
+
+        function renderError(entryId, err) {
+            const container = document.getElementById(`${entryId}-response`);
+            container.innerHTML = `
+                <div class="text-rose-500 font-bold mb-2">Network Error / CORS Blocked</div>
+                <div class="text-xs text-slate-400">
+                    ${err.message}<br><br>
+                    Possible reasons:<br>
+                    1. The target server does not support CORS.<br>
+                    2. You are blocked by a firewall.<br>
+                    3. Invalid URL.
+                </div>
+            `;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+
+</html>

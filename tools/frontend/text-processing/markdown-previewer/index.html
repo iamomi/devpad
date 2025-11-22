@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Previewer with Export</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Marked for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Highlight.js for syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .editor-pane {
+            font-family: 'Fira Code', monospace;
+            background-color: #1e293b;
+            color: #e2e8f0;
+            resize: none;
+            outline: none;
+        }
+
+        /* Markdown Preview Styles */
+        .preview-pane {
+            background-color: #0f172a;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .preview-pane h1,
+        .preview-pane h2,
+        .preview-pane h3,
+        .preview-pane h4,
+        .preview-pane h5,
+        .preview-pane h6 {
+            color: #f8fafc;
+            font-weight: 700;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            line-height: 1.2;
+        }
+
+        .preview-pane h1 {
+            font-size: 2.25em;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 0.3em;
+        }
+
+        .preview-pane h2 {
+            font-size: 1.75em;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 0.3em;
+        }
+
+        .preview-pane h3 {
+            font-size: 1.5em;
+        }
+
+        .preview-pane p {
+            margin-bottom: 1em;
+        }
+
+        .preview-pane a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+
+        .preview-pane a:hover {
+            text-decoration: underline;
+        }
+
+        .preview-pane ul,
+        .preview-pane ol {
+            margin-bottom: 1em;
+            padding-left: 2em;
+        }
+
+        .preview-pane ul {
+            list-style-type: disc;
+        }
+
+        .preview-pane ol {
+            list-style-type: decimal;
+        }
+
+        .preview-pane blockquote {
+            border-left: 4px solid #334155;
+            padding-left: 1em;
+            color: #94a3b8;
+            margin-bottom: 1em;
+        }
+
+        .preview-pane code {
+            font-family: 'Fira Code', monospace;
+            background-color: #1e293b;
+            padding: 0.2em 0.4em;
+            border-radius: 0.25em;
+            font-size: 0.875em;
+        }
+
+        .preview-pane pre {
+            background-color: #1e293b;
+            padding: 1em;
+            border-radius: 0.5em;
+            overflow-x: auto;
+            margin-bottom: 1em;
+        }
+
+        .preview-pane pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+
+        .preview-pane img {
+            max-width: 100%;
+            border-radius: 0.5em;
+        }
+
+        .preview-pane table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1em;
+        }
+
+        .preview-pane th,
+        .preview-pane td {
+            border: 1px solid #334155;
+            padding: 0.5em;
+        }
+
+        .preview-pane th {
+            background-color: #1e293b;
+        }
+
+        .toolbar-btn {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            color: #94a3b8;
+            transition: all 0.2s;
+        }
+
+        .toolbar-btn:hover {
+            background-color: #334155;
+            color: #f8fafc;
+        }
+    </style>
+</head>
+
+<body class="h-screen flex flex-col overflow-hidden">
+    <header class="bg-slate-900 border-b border-slate-800 p-3 flex items-center justify-between shrink-0">
+        <h1 class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">
+            Markdown Previewer
+        </h1>
+        <div class="flex gap-2">
+            <button id="export-html-btn"
+                class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded text-sm font-medium transition-colors">
+                Copy HTML
+            </button>
+            <button id="print-btn"
+                class="bg-teal-600 hover:bg-teal-700 text-white px-3 py-1.5 rounded text-sm font-medium transition-colors">
+                Print / PDF
+            </button>
+        </div>
+    </header>
+
+    <div class="bg-slate-900 border-b border-slate-800 p-2 flex gap-1 shrink-0">
+        <button class="toolbar-btn font-bold" onclick="insertText('**', '**')" title="Bold">B</button>
+        <button class="toolbar-btn italic" onclick="insertText('*', '*')" title="Italic">I</button>
+        <button class="toolbar-btn line-through" onclick="insertText('~~', '~~')" title="Strikethrough">S</button>
+        <div class="w-px bg-slate-700 mx-1"></div>
+        <button class="toolbar-btn" onclick="insertText('# ', '')" title="Heading 1">H1</button>
+        <button class="toolbar-btn" onclick="insertText('## ', '')" title="Heading 2">H2</button>
+        <button class="toolbar-btn" onclick="insertText('### ', '')" title="Heading 3">H3</button>
+        <div class="w-px bg-slate-700 mx-1"></div>
+        <button class="toolbar-btn" onclick="insertText('`', '`')" title="Inline Code">Code</button>
+        <button class="toolbar-btn" onclick="insertText('```\n', '\n```')" title="Code Block">Block</button>
+        <div class="w-px bg-slate-700 mx-1"></div>
+        <button class="toolbar-btn" onclick="insertText('[', '](url)')" title="Link">Link</button>
+        <button class="toolbar-btn" onclick="insertText('![', '](url)')" title="Image">Img</button>
+        <div class="w-px bg-slate-700 mx-1"></div>
+        <button class="toolbar-btn" onclick="insertText('- ', '')" title="List Item">List</button>
+        <button class="toolbar-btn" onclick="insertText('> ', '')" title="Quote">Quote</button>
+    </div>
+
+    <main class="flex-1 flex overflow-hidden">
+        <!-- Editor -->
+        <div class="w-1/2 flex flex-col border-r border-slate-800">
+            <textarea id="editor" class="editor-pane flex-1 p-6 text-sm leading-relaxed"
+                placeholder="Type markdown here..."># Hello World
+
+This is a **live** markdown previewer.
+
+## Features
+- Real-time rendering
+- Syntax highlighting
+- Export options
+
+```javascript
+function hello() {
+  console.log("Hello World");
+}
+```
+</textarea>
+        </div>
+
+        <!-- Preview -->
+        <div class="w-1/2 flex flex-col bg-slate-950">
+            <div id="preview" class="preview-pane flex-1 p-8 overflow-y-auto"></div>
+        </div>
+    </main>
+
+    <script>
+        const editor = document.getElementById('editor');
+        const preview = document.getElementById('preview');
+
+        // Configure Marked
+        marked.setOptions({
+            highlight: function (code, lang) {
+                const language = highlight.getLanguage(lang) ? lang : 'plaintext';
+                return highlight.highlight(code, { language }).value;
+            },
+            langPrefix: 'hljs language-',
+            breaks: true,
+            gfm: true
+        });
+
+        function updatePreview() {
+            const markdown = editor.value;
+            const html = marked.parse(markdown);
+            preview.innerHTML = html;
+        }
+
+        function insertText(before, after) {
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const text = editor.value;
+            const selection = text.substring(start, end);
+
+            const newText = text.substring(0, start) + before + selection + after + text.substring(end);
+
+            editor.value = newText;
+            editor.focus();
+            editor.selectionStart = start + before.length;
+            editor.selectionEnd = end + before.length; // Keep cursor inside or at end of selection
+
+            updatePreview();
+        }
+
+        // Listeners
+        editor.addEventListener('input', updatePreview);
+
+        // Sync Scroll (Basic)
+        editor.addEventListener('scroll', () => {
+            const percent = editor.scrollTop / (editor.scrollHeight - editor.clientHeight);
+            preview.scrollTop = percent * (preview.scrollHeight - preview.clientHeight);
+        });
+
+        document.getElementById('export-html-btn').addEventListener('click', () => {
+            const html = marked.parse(editor.value);
+            navigator.clipboard.writeText(html).then(() => {
+                const btn = document.getElementById('export-html-btn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.classList.add('text-emerald-400');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('text-emerald-400');
+                }, 2000);
+            });
+        });
+
+        document.getElementById('print-btn').addEventListener('click', () => {
+            window.print();
+        });
+
+        // Init
+        updatePreview();
+    </script>
+</body>
+
+</html>
