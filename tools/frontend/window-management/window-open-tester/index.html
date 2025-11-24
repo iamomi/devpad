@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hyper Window.open() Test Pad X - AI Edition</title>
+    <title>Window.open() Tester</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="../../../shared/styles.css">
@@ -13,645 +13,678 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #0f172a;
-            /* slate-900 */
             color: #e2e8f0;
-            /* slate-200 */
         }
 
-        .dark .dark\:bg-slate-800 {
-            background-color: #1e293b !important;
+        .control-group {
+            margin-bottom: 1rem;
         }
 
-        .dark .dark\:bg-slate-700 {
-            background-color: #334155 !important;
-        }
-
-        .dark .dark\:bg-slate-900 {
-            background-color: #0f172a !important;
-        }
-
-        .dark .dark\:text-slate-200 {
-            color: #e2e8f0 !important;
-        }
-
-        .dark .dark\:text-slate-400 {
-            color: #94a3b8 !important;
-        }
-
-        .dark .dark\:border-slate-700 {
-            border-color: #334155 !important;
-        }
-
-        .dark .dark\:border-slate-600 {
-            border-color: #475569 !important;
-        }
-
-        .dark .dark\:hover\:bg-slate-700:hover {
-            background-color: #334155 !important;
-        }
-
-        .dark .dark\:focus\:ring-sky-500:focus {
-            --tw-ring-color: #0ea5e9 !important;
-        }
-
-
-        label {
+        .control-group label {
             display: block;
-            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
             font-weight: 500;
             color: #94a3b8;
-            /* slate-400 */
+            margin-bottom: 0.25rem;
         }
 
-        input[type="text"],
-        input[type="number"],
-        select,
-        textarea {
+        .control-group select,
+        .control-group input[type="text"],
+        .control-group input[type="number"] {
             width: 100%;
-            padding: 0.6rem 0.8rem;
-            border-radius: 0.375rem;
-            /* rounded-md */
-            border: 1px solid #334155;
-            /* slate-700 */
             background-color: #1e293b;
-            /* slate-800 */
+            border: 1px solid #334155;
             color: #e2e8f0;
-            /* slate-200 */
-            transition: border-color 0.2s, box-shadow 0.2s;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
         }
 
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        select:focus,
-        textarea:focus {
+        .control-group select:focus,
+        .control-group input:focus {
             outline: none;
             border-color: #0ea5e9;
-            /* sky-500 */
-            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.5);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
         }
 
-        input[type="checkbox"] {
-            margin-right: 0.5rem;
-            transform: scale(1.1);
-            accent-color: #0ea5e9;
-            /* sky-500 */
-        }
-
-        button {
-            padding: 0.6rem 1rem;
-            border-radius: 0.375rem;
-            /* rounded-md */
-            font-weight: 600;
-            transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
-            display: inline-flex;
+        .checkbox-group {
+            display: flex;
             align-items: center;
             gap: 0.5rem;
-            border: 1px solid transparent;
+            margin-bottom: 0.5rem;
         }
 
-        button:active {
-            transform: scale(0.97);
+        .checkbox-group input[type="checkbox"] {
+            width: 1rem;
+            height: 1rem;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.25rem;
+            accent-color: #0ea5e9;
         }
 
-        button:disabled {
+        .checkbox-group label {
+            font-size: 0.875rem;
+            color: #cbd5e1;
+            user-select: none;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
 
         .btn-primary {
             background-color: #0ea5e9;
-            /* sky-500 */
             color: white;
-            border-color: #0ea5e9;
         }
 
         .btn-primary:hover:not(:disabled) {
             background-color: #0284c7;
-            /* sky-600 */
-            box-shadow: 0 4px 14px 0 rgba(14, 165, 233, 0.3);
         }
 
         .btn-secondary {
             background-color: #334155;
-            /* slate-700 */
             color: #e2e8f0;
-            /* slate-200 */
-            border-color: #475569;
-            /* slate-600 */
         }
 
         .btn-secondary:hover:not(:disabled) {
             background-color: #475569;
-            /* slate-600 */
         }
 
         .btn-danger {
-            background-color: #e11d48;
-            /* rose-600 */
+            background-color: #ef4444;
             color: white;
-            border-color: #e11d48;
         }
 
         .btn-danger:hover:not(:disabled) {
-            background-color: #be123c;
-            /* rose-700 */
-            box-shadow: 0 4px 14px 0 rgba(225, 29, 72, 0.3);
+            background-color: #dc2626;
         }
 
-        .btn-warning {
-            background-color: #f59e0b;
-            /* amber-500 */
-            color: #1e293b;
-            /* slate-800 */
-            border-color: #f59e0b;
-        }
-
-        .btn-warning:hover:not(:disabled) {
-            background-color: #d97706;
-            /* amber-600 */
-            box-shadow: 0 4px 14px 0 rgba(245, 158, 11, 0.3);
-        }
-
-        .btn-info {
-            background-color: #22d3ee;
-            /* cyan-400 */
-            color: #1e293b;
-            /* slate-800 */
-            border-color: #22d3ee;
-        }
-
-        .btn-info:hover:not(:disabled) {
-            background-color: #06b6d4;
-            /* cyan-500 */
-            box-shadow: 0 4px 14px 0 rgba(34, 211, 238, 0.3);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            color: #0ea5e9;
-            border-color: #0ea5e9;
-        }
-
-        .btn-outline:hover:not(:disabled) {
-            background-color: rgba(14, 165, 233, 0.1);
-        }
-
-        .btn-ai {
-            background-image: linear-gradient(to right, #22d3ee, #0ea5e9);
+        .btn-success {
+            background-color: #10b981;
             color: white;
-            border: none;
         }
 
-        .btn-ai:hover:not(:disabled) {
-            box-shadow: 0 4px 14px 0 rgba(14, 165, 233, 0.4);
+        .btn-success:hover:not(:disabled) {
+            background-color: #059669;
         }
-
 
         .log-entry {
-            padding: 0.6rem 0.8rem;
-            border-bottom: 1px solid #1e293b;
-            /* slate-800 */
-            font-size: 0.875rem;
-            word-break: break-all;
-            line-height: 1.5;
-            display: flex;
-            align-items: flex-start;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid #334155;
         }
 
         .log-entry:last-child {
             border-bottom: none;
         }
 
-        .log-timestamp {
-            font-family: 'Fira Code', monospace;
-            font-size: 0.75rem;
+        .log-time {
             color: #64748b;
-            /* slate-500 */
-            margin-right: 0.75rem;
-            white-space: nowrap;
+            margin-right: 0.5rem;
         }
 
         .log-info {
-            color: #38bdf8;
-            /* sky-400 */
+            color: #94a3b8;
         }
 
         .log-success {
-            color: #34d399;
-            /* emerald-400 */
+            color: #4ade80;
         }
 
         .log-error {
-            color: #fb7185;
-            /* rose-400 */
+            color: #f87171;
         }
 
         .log-warn {
-            color: #facc15;
-            /* yellow-400 */
-        }
-
-        .log-message-sent {
-            color: #a78bfa;
-            /* violet-400 */
-        }
-
-        .log-message-received {
-            color: #f472b6;
-            /* pink-400 */
-        }
-
-        .log-analysis {
-            color: #2dd4bf;
-            /* teal-400 */
-        }
-
-        .log-ai {
-            color: #818cf8;
-            /* indigo-400 */
-            font-style: italic;
-        }
-
-
-        .card {
-            background-color: #1e293b;
-            /* slate-800 */
-            border-radius: 0.5rem;
-            /* rounded-lg */
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-            border: 1px solid #334155;
-            /* slate-700 */
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.25rem;
-            /* text-xl */
-            font-weight: 600;
-            color: #cbd5e1;
-            /* slate-300 */
-            margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid #334155;
-            /* slate-700 */
-        }
-
-        .icon {
-            width: 1.25rem;
-            height: 1.25rem;
-        }
-
-        /* Size for icons in headers/buttons */
-
-        details>summary {
-            cursor: pointer;
-            font-weight: 600;
-            padding: 0.75rem 1rem;
-            background-color: #334155;
-            /* slate-700 */
-            border-radius: 0.375rem;
-            /* rounded-md */
-            margin-bottom: 0.5rem;
-            transition: background-color 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        details>summary:hover {
-            background-color: #475569;
-            /* slate-600 */
-        }
-
-        details[open]>summary {
-            margin-bottom: 1rem;
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-
-        details .details-content {
-            padding: 1rem;
-            border: 1px solid #334155;
-            border-top: none;
-            border-bottom-left-radius: 0.375rem;
-            border-bottom-right-radius: 0.375rem;
-            background-color: #162133;
-            /* Slightly darker for content */
-        }
-
-        .docs h3 {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-            color: #0ea5e9;
-        }
-
-        /* sky-500 */
-        .docs p,
-        .docs li {
-            margin-bottom: 0.5rem;
-            line-height: 1.6;
-            color: #94a3b8;
-        }
-
-        /* slate-400 */
-        .docs ul {
-            list-style-type: disc;
-            margin-left: 1.5rem;
-        }
-
-        .docs code {
-            background-color: #334155;
-            padding: 0.1rem 0.4rem;
-            border-radius: 0.25rem;
-            font-family: 'Fira Code', monospace;
-            color: #f0abfc;
-            /* fuchsia-300 */
-            font-size: 0.9em;
-        }
-
-        .docs strong {
-            color: #e2e8f0;
-            /* slate-200 */
-        }
-
-        .feature-control-group {
-            margin-bottom: 0.75rem;
-        }
-
-        .feature-control-group label {
-            font-size: 0.875rem;
-            margin-bottom: 0.125rem;
-        }
-
-        .feature-control-group select {
-            font-size: 0.875rem;
-            padding: 0.4rem 0.6rem;
-        }
-
-        .ai-result-area {
-            background-color: #0f172a;
-            /* slate-900 */
-            padding: 0.75rem;
-            border-radius: 0.375rem;
-            /* rounded-md */
-            border: 1px dashed #334155;
-            /* slate-700 */
-            margin-top: 0.5rem;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.875rem;
-            color: #94a3b8;
-            /* slate-400 */
-            white-space: pre-wrap;
-            /* To respect newlines from AI */
-            min-height: 50px;
+            color: #fbbf24;
         }
     </style>
 </head>
 
-<body class="dark antialiased">
-    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
-        <header class="mb-10 text-center">
-            <h1
-                class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-cyan-400 to-teal-400 pb-2">
-                Hyper Window.open() Test Pad X
-            </h1>
-            <p class="text-slate-400 text-lg">Dive deep into `window.open()` behaviors with unparalleled control & AI
-                assistance.</p>
-        </header>
-
-        <section class="mb-8 grid md:grid-cols-2 gap-6">
-            <div class="card md:col-span-2">
-                <h2 class="card-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                        class="icon text-sky-400">
-                        <path
-                            d="M3 4.25A2.25 2.25 0 015.25 2h5.5A2.25 2.25 0 0113 4.25v2a.75.75 0 01-1.5 0v-2a.75.75 0 00-.75-.75h-5.5a.75.75 0 00-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 00.75-.75v-2a.75.75 0 011.5 0v2A2.25 2.25 0 0110.75 18h-5.5A2.25 2.25 0 013 15.75V4.25z" />
-                        <path
-                            d="M14.75 8a.75.75 0 01.75.75v2.5a.75.75 0 01-1.5 0V9.81l-2.22 2.22a.75.75 0 01-1.06-1.06L12.94 8.75H11.5a.75.75 0 010-1.5h2.5a.75.75 0 01.75.75z" />
-                    </svg>
-                    Target Window & Features
-                </h2>
-                <div class="grid lg:grid-cols-3 gap-6">
-                    <div class="space-y-4">
-                        <div>
-                            <label for="url">URL to Open:</label>
-                            <div class="flex">
-                                <input type="text" id="url" placeholder="https://example.com or default"
-                                    class="rounded-r-none">
-                                <button id="analyzeUrlBtn" class="btn-info rounded-l-none px-3"
-                                    title="Analyze URL Headers & Policy">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                        class="icon">
-                                        <path fill-rule="evenodd"
-                                            d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <p class="text-xs text-slate-500 mt-1">Default is an interactive dark-themed child page.</p>
-                        </div>
-                        <div>
-                            <label for="windowNameSelect">Window Name (Target):</label>
-                            <select id="windowNameSelect">
-                                <option value="_blank">_blank (New Tab/Window)</option>
-                                <option value="_self">_self (Current Frame)</option>
-                                <option value="_parent">_parent (Parent Frame)</option>
-                                <option value="_top">_top (Outermost Frame)</option>
-                                <option value="_unfencedTop">_unfencedTop (If in Fenced Frame)</option>
-                                <option value="custom">Custom...</option>
-                            </select>
-                            <input type="text" id="windowNameCustom" placeholder="Enter custom name"
-                                class="mt-1 hidden">
-                        </div>
-                        <div>
-                            <button id="centerScaleBtn" class="btn-outline w-full justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                    class="icon">
-                                    <path
-                                        d="M3 3a1 1 0 000 2v9.5A1.5 1.5 0 004.5 16h9.5a1 1 0 000-2H5V5h9.5a.5.5 0 00.5-.5V3a1 1 0 00-2 0v1H3z" />
-                                    <path
-                                        d="M6 8.5A1.5 1.5 0 017.5 7h6A1.5 1.5 0 0115 8.5v6A1.5 1.5 0 0113.5 16h-6A1.5 1.5 0 016 14.5v-6zM7.5 8a.5.5 0 00-.5.5v6a.5.5 0 00.5.5h6a.5.5 0 00.5-.5v-6a.5.5 0 00-.5-.5h-6z" />
-                                </svg>
-                                Center & Scale (70%)
-                            </button>
-                        </div>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="feature-control-group"><label for="width">Width:</label><input type="number"
-                                id="width" placeholder="e.g., 800"></div>
-                        <div class="feature-control-group"><label for="height">Height:</label><input type="number"
-                                id="height" placeholder="e.g., 600"></div>
-                        <div class="feature-control-group"><label for="left">Left:</label><input type="number" id="left"
-                                placeholder="e.g., 100"></div>
-                        <div class="feature-control-group"><label for="top">Top:</label><input type="number" id="top"
-                                placeholder="e.g., 100"></div>
-                    </div>
-                    <div class="space-y-1">
-                        <div class="grid grid-cols-2 gap-x-4 gap-y-2">
-                            <div class="feature-control-group"><label for="menubarFeature">Menubar:</label><select
-                                    id="menubarFeature">
-                                    <option value="default">Default (Omit)</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select></div>
-                            <div class="feature-control-group"><label for="toolbarFeature">Toolbar:</label><select
-                                    id="toolbarFeature">
-                                    <option value="default">Default (Omit)</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select></div>
-                            <div class="feature-control-group"><label for="locationFeature">Location (URL
-                                    Bar):</label><select id="locationFeature">
-                                    <option value="default">Default (Omit)</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select></div>
-                            <div class="feature-control-group"><label for="statusFeature">Status:</label><select
-                                    id="statusFeature">
-                                    <option value="default">Default (Omit)</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select></div>
-                            <div class="feature-control-group"><label for="resizableFeature">Resizable:</label><select
-                                    id="resizableFeature">
-                                    <option value="default">Default (Omit)</option>
-                                    <option value="yes" selected>Yes</option>
-                                    <option value="no">No</option>
-                                </select></div>
-                            <div class="feature-control-group"><label for="scrollbarsFeature">Scrollbars:</label><select
-                                    id="scrollbarsFeature">
-                                    <option value="default">Default (Omit)</option>
-                                    <option value="yes" selected>Yes</option>
-                                    <option value="no">No</option>
-                                </select></div>
-                            <div class="feature-control-group"><label
-                                    for="personalbarFeature">Personalbar:</label><select id="personalbarFeature">
-                                    <option value="default">Default (Omit)</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select></div>
-                            <div class="feature-control-group"><label for="noopenerFeature">noopener:</label><select
-                                    id="noopenerFeature">
-                                    <option value="default">Default (Omit)</option>
-                                    <option value="include">Include</option>
-                                </select></div>
-                            <div class="feature-control-group"><label for="noreferrerFeature">noreferrer:</label><select
-                                    id="noreferrerFeature">
-                                    <option value="default">Default (Omit)</option>
-                                    <option value="include">Include</option>
-                                </select></div>
-                            <div class="feature-control-group"><label for="popupFeature">popup:</label><select
-                                    id="popupFeature">
-                                    <option value="default">Default (Omit)</option>
-                                    <option value="include">Include</option>
-                                </select></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card md:col-span-2">
-                <h2 class="card-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                        class="icon text-cyan-400">
-                        <path fill-rule="evenodd"
-                            d="M5.965 3.603a.75.75 0 011.06.008l4.5 5.25a.75.75 0 010 .978l-4.5 5.25a.75.75 0 11-1.068-1.05l4.044-4.718L5.957 4.66A.75.75 0 015.965 3.603zm5.25 0a.75.75 0 011.06.008l4.5 5.25a.75.75 0 010 .978l-4.5 5.25a.75.75 0 11-1.068-1.05l4.044-4.718L11.207 4.66a.75.75 0 01.008-1.057z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    Automation & Advanced Controls
-                </h2>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div>
-                        <label for="autoCloseTimeout">Auto-close child after (sec, 0=off):</label>
-                        <input type="number" id="autoCloseTimeout" value="0" min="0">
-                    </div>
-                    <div>
-                        <label for="logIntervalSeconds">Log properties every (sec, 0=off):</label>
-                        <input type="number" id="logIntervalSeconds" value="0" min="0">
-                    </div>
-                    <div>
-                        <label for="closeOnUrlContains">Close child if its URL contains:</label>
-                        <input type="text" id="closeOnUrlContains" placeholder="e.g., /logout">
-                    </div>
-                    <div>
-                        <label for="targetOrigin">Target Origin for postMessage:</label>
-                        <input type="text" id="targetOrigin" value="*" placeholder="e.g., https://example.com">
-                    </div>
-                    <div class="md:col-span-3 flex items-center gap-4 mt-2">
-                        <div class="flex items-center">
-                            <input type="checkbox" id="logToConsole" checked class="mr-2">
-                            <label for="logToConsole" class="inline cursor-pointer mb-0 text-sm">Mirror logs to browser
-                                console</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="urlAnalysisSection" class="mb-6 hidden">
-            <details class="card">
-                <summary class="text-lg card-header !mb-0 !pb-0 !border-b-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                        class="icon text-teal-400">
-                        <path fill-rule="evenodd"
-                            d="M15.94 4.06a.75.75 0 010 1.06L6.112 14.97a.75.75 0 01-1.06 0L4.06 13.938a.75.75 0 111.06-1.06L5.582 13.3l9.298-9.298a.75.75 0 011.06 0z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    URL Analysis Results
-                    <span class="ml-auto text-xs text-slate-500">(Click to expand/collapse)</span>
-                </summary>
-                <div id="urlAnalysisResults"
-                    class="min-h-[50px] max-h-96 overflow-y-auto p-3 mt-2 text-sm bg-slate-900 rounded-md">Awaiting
-                    analysis...</div>
-            </details>
-        </section>
-
-        <section class="mb-8 card">
-            <h2 class="card-header">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                    class="icon text-fuchsia-400">
-                    <path fill-rule="evenodd"
-                        d="M10.002 3.002a.75.75 0 01.75.75v1.502a.75.75 0 01-1.5 0V3.752a.75.75 0 01.75-.75zm1.606 1.057a.75.75 0 010 1.06l-1.061 1.061a.75.75 0 11-1.06-1.06l1.06-1.061a.75.75 0 011.06 0zm3.183-.001a.75.75 0 011.06 0l1.06 1.06a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zM16.25 9.25a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V10a.75.75 0 01.75-.75zm-1.06 3.183a.75.75 0 011.061 0l1.06 1.06a.75.75 0 11-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm-3.183.001a.75.75 0 010 1.06l-1.06 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zM3 9.998a.75.75 0 01.75-.75h1.502a.75.75 0 010 1.5H3.752a.75.75 0 01-.75-.75zm1.059 1.606a.75.75 0 011.06 0l1.06 1.06a.75.75 0 01-1.06 1.06l-1.06-1.061a.75.75 0 010-1.06zm-.001-3.183a.75.75 0 010-1.06l1.06-1.06a.75.75 0 011.06 1.06l-1.06 1.06a.75.75 0 01-1.06 0z"
-                        clip-rule="evenodd" />
+<body class="h-screen flex flex-col overflow-hidden">
+    <header class="bg-slate-900 border-b border-slate-800 p-4 flex items-center justify-between shrink-0">
+        <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-indigo-400">
+            Window.open() Tester
+        </h1>
+        <div class="flex gap-2">
+            <button id="readme-btn"
+                class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
                 </svg>
-                Window Features String
-            </h2>
-            <div class="mb-3">
-                <label for="featureStringPreview" class="text-sm">Generated from UI Controls (Read-only):</label>
-                <div id="featureStringPreview" class="min-h-[40px] p-3 bg-slate-900 rounded-md text-slate-300 text-xs">
+                README
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 flex overflow-hidden">
+        <!-- Sidebar: Controls -->
+        <aside class="w-96 bg-slate-900 border-r border-slate-800 overflow-y-auto p-4 shrink-0">
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold text-sky-400 mb-4 border-b border-slate-800 pb-2">Configuration</h2>
+
+                <div class="control-group">
+                    <label>URL</label>
+                    <input type="text" id="url" placeholder="https://example.com (or leave empty for default)">
                 </div>
-            </div>
-            <div class="mb-3">
-                <label for="manualFeatureString" class="text-sm">Manual Feature String Override:</label>
-                <textarea id="manualFeatureString" rows="2" class="text-xs"
-                    placeholder="e.g., width=500,height=400,noopener"></textarea>
-            </div>
-            <div class="flex items-center justify-between">
-                <button id="syncManualStringBtn" class="btn-outline btn-secondary text-xs">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="icon">
-                        <path fill-rule="evenodd"
-                            d="M15.312 11.424a5.5 5.5 0 01-9.204 2.101l-.724.724a.75.75 0 11-1.06-1.06l.96-.96a.75.75 0 011.06 0l.724.724a3.985 3.985 0 006.362-1.529.75.75 0 011.313.723zM4.688 8.576a5.5 5.5 0 019.204-2.101l.724-.724a.75.75 0 111.06 1.06l-.96.96a.75.75 0 01-1.06 0l-.724-.724a3.985 3.985 0 00-6.362 1.529.75.75 0 01-1.313-.723z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    Sync from UI Controls to Manual
+
+                <div class="control-group">
+                    <label>Target</label>
+                    <select id="target">
+                        <option value="_blank">_blank (New Window/Tab)</option>
+                        <option value="_self">_self (Current Frame)</option>
+                        <option value="_parent">_parent (Parent Frame)</option>
+                        <option value="_top">_top (Top Frame)</option>
+                        <option value="_unfencedTop">_unfencedTop</option>
+                        <option value="custom">Custom Name...</option>
+                    </select>
+                </div>
+                <div class="control-group hidden" id="custom-target-group">
+                    <label>Custom Name</label>
+                    <input type="text" id="custom-target-name" placeholder="myWindowName">
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <div class="control-group mb-0">
+                        <label>Width</label>
+                        <input type="number" id="width" placeholder="e.g. 800">
+                    </div>
+                    <div class="control-group mb-0">
+                        <label>Height</label>
+                        <input type="number" id="height" placeholder="e.g. 600">
+                    </div>
+                    <div class="control-group mb-0">
+                        <label>Left</label>
+                        <input type="number" id="left" placeholder="e.g. 100">
+                    </div>
+                    <div class="control-group mb-0">
+                        <label>Top</label>
+                        <input type="number" id="top" placeholder="e.g. 100">
+                    </div>
+                </div>
+
+                <button id="center-btn" class="btn btn-secondary w-full mb-4 text-xs">
+                    Center Window (70% Screen)
                 </button>
-                <div class="flex items-center">
-                    <input type="checkbox" id="useManualStringCheckbox" class="mr-2">
-                    <label for="useManualStringCheckbox" class="mb-0 text-sm">Use This Manual String</label>
+
+                <div class="space-y-2 mb-6">
+                    <label class="text-sm font-medium text-slate-400 block mb-2">Features</label>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="popup">
+                            <label for="popup">popup</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="noopener">
+                            <label for="noopener">noopener</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="noreferrer">
+                            <label for="noreferrer">noreferrer</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="resizable" checked>
+                            <label for="resizable">resizable</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="scrollbars" checked>
+                            <label for="scrollbars">scrollbars</label>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 space-y-3">
+                        <div class="control-group mb-0">
+                            <label class="text-xs">Menubar</label>
+                            <select id="menubar" class="text-xs py-1">
+                                <option value="">Default</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                        <div class="control-group mb-0">
+                            <label class="text-xs">Toolbar</label>
+                            <select id="toolbar" class="text-xs py-1">
+                                <option value="">Default</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                        <div class="control-group mb-0">
+                            <label class="text-xs">Location</label>
+                            <select id="location" class="text-xs py-1">
+                                <option value="">Default</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                        <div class="control-group mb-0">
+                            <label class="text-xs">Status</label>
+                            <select id="status" class="text-xs py-1">
+                                <option value="">Default</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Feature String (Editable)</label>
+                    <textarea id="feature-string" rows="3" class="font-mono text-xs"></textarea>
+                </div>
+
+                <button id="open-btn" class="btn btn-primary w-full text-lg py-3">
+                    Open Window
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <section class="flex-1 flex flex-col min-w-0 bg-slate-950">
+            <div class="flex-1 p-8 overflow-auto">
+                <div class="max-w-4xl mx-auto space-y-6">
+
+                    <!-- Status Panel -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-lg p-6">
+                        <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-slate-500" id="status-indicator"></span>
+                            Window Status
+                        </h2>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="text-slate-400 block">Reference</span>
+                                <span id="status-ref" class="font-mono text-slate-200">null</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block">Closed</span>
+                                <span id="status-closed" class="font-mono text-slate-200">-</span>
+                            </div>
+                            <div class="col-span-2">
+                                <span class="text-slate-400 block">Opener Access</span>
+                                <span id="status-access" class="font-mono text-slate-200">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions Panel -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-lg p-6">
+                        <h2 class="text-lg font-semibold text-white mb-4">Interactions</h2>
+
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <button id="focus-btn" class="btn btn-secondary" disabled>Focus Child</button>
+                            <button id="blur-btn" class="btn btn-secondary" disabled>Blur Child</button>
+                            <button id="close-child-btn" class="btn btn-danger" disabled>Close Child</button>
+                            <button id="check-closed-btn" class="btn btn-secondary" disabled>Check Closed</button>
+                        </div>
+
+                        <div class="border-t border-slate-800 pt-6">
+                            <h3 class="text-sm font-medium text-slate-300 mb-3">Post Message</h3>
+                            <div class="flex gap-2">
+                                <input type="text" id="message-input" placeholder="Message to send..."
+                                    class="flex-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                                <button id="send-msg-btn" class="btn btn-primary" disabled>Send</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Logs Panel -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-lg flex flex-col h-64">
+                        <div class="p-3 border-b border-slate-800 flex justify-between items-center bg-slate-800/50">
+                            <h2 class="text-sm font-semibold text-slate-300">Event Logs</h2>
+                            <button id="clear-logs-btn" class="text-xs text-slate-400 hover:text-white">Clear</button>
+                        </div>
+                        <div id="logs-container" class="flex-1 overflow-y-auto p-4 space-y-1 font-mono">
+                            <div class="log-entry log-info">Ready to test...</div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
+    </main>
 
-        <section class="mb-8 card">
-            <h2 class="card-header">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                    class="icon text-purple-400">
-                    <path fill-rule="evenodd"
-                        d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.39-3.423 3.338.95 4.895 4.236 2.286 4.236-2.286.95-4.895-3.423-3.338-4.753-.39L10.868 2.884zm-.623 1.062L8.61 2.062a.25.25 0 00-.478 0L6.5 4.062l-2.446.202-1.763 1.716.49 2.52.001.002.002.002.002.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.002.003.00
+    <!-- README Modal -->
+    <div id="readme-modal" class="modal-overlay fixed inset-0 hidden flex items-center justify-center z-50">
+        <div class="modal-content w-[800px] h-[600px] rounded-lg flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-slate-700 shrink-0">
+                <h2 class="text-xl font-bold text-white">Documentation</h2>
+                <button id="close-modal"
+                    class="text-slate-400 hover:text-white transition-colors p-1 rounded hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div id="readme-content" class="flex-1 overflow-auto p-6 markdown-body">
+                Loading...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- State ---
+        let openedWindow = null;
+        let pollInterval = null;
+
+        // --- DOM Elements ---
+        const els = {
+            url: document.getElementById('url'),
+            target: document.getElementById('target'),
+            customTargetGroup: document.getElementById('custom-target-group'),
+            customTargetName: document.getElementById('custom-target-name'),
+            width: document.getElementById('width'),
+            height: document.getElementById('height'),
+            left: document.getElementById('left'),
+            top: document.getElementById('top'),
+            centerBtn: document.getElementById('center-btn'),
+            featureString: document.getElementById('feature-string'),
+            openBtn: document.getElementById('open-btn'),
+
+            // Feature inputs
+            popup: document.getElementById('popup'),
+            noopener: document.getElementById('noopener'),
+            noreferrer: document.getElementById('noreferrer'),
+            resizable: document.getElementById('resizable'),
+            scrollbars: document.getElementById('scrollbars'),
+            menubar: document.getElementById('menubar'),
+            toolbar: document.getElementById('toolbar'),
+            location: document.getElementById('location'),
+            status: document.getElementById('status'),
+
+            // Status & Actions
+            statusIndicator: document.getElementById('status-indicator'),
+            statusRef: document.getElementById('status-ref'),
+            statusClosed: document.getElementById('status-closed'),
+            statusAccess: document.getElementById('status-access'),
+
+            focusBtn: document.getElementById('focus-btn'),
+            blurBtn: document.getElementById('blur-btn'),
+            closeChildBtn: document.getElementById('close-child-btn'),
+            checkClosedBtn: document.getElementById('check-closed-btn'),
+
+            messageInput: document.getElementById('message-input'),
+            sendMsgBtn: document.getElementById('send-msg-btn'),
+
+            logsContainer: document.getElementById('logs-container'),
+            clearLogsBtn: document.getElementById('clear-logs-btn')
+        };
+
+        // --- Default Child Page ---
+        const defaultChildPageHTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Child Window</title>
+    <style>
+        body { font-family: system-ui, sans-serif; padding: 2rem; background: #f0f9ff; color: #0f172a; }
+        .card { background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); max-width: 500px; margin: 0 auto; }
+        h1 { color: #0284c7; margin-top: 0; }
+        .info { background: #f1f5f9; padding: 1rem; border-radius: 0.25rem; margin: 1rem 0; font-family: monospace; font-size: 0.875rem; }
+        input { width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.25rem; box-sizing: border-box; }
+        button { background: #0ea5e9; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer; width: 100%; }
+        button:hover { background: #0284c7; }
+        #log { margin-top: 1rem; font-size: 0.75rem; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Interactive Child</h1>
+        <p>I am a child window opened by the tester.</p>
+        
+        <div class="info">
+            <div>window.name: <span id="name"></span></div>
+            <div>window.opener: <span id="opener"></span></div>
+        </div>
+
+        <div>
+            <input type="text" id="msg" placeholder="Message to parent...">
+            <button onclick="sendBack()">Send to Parent</button>
+        </div>
+
+        <div id="log">Waiting for messages...</div>
+    </div>
+
+    <script>
+        document.getElementById('name').textContent = window.name || '(none)';
+        document.getElementById('opener').textContent = window.opener ? 'Available' : 'Null';
+
+        function log(msg) {
+            const div = document.createElement('div');
+            div.textContent = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+            document.getElementById('log').prepend(div);
+        }
+
+        function sendBack() {
+            if (window.opener) {
+                const msg = document.getElementById('msg').value;
+                window.opener.postMessage(msg, '*');
+                log('Sent: ' + msg);
+            } else {
+                log('Error: No opener available');
+            }
+        }
+
+        window.addEventListener('message', (e) => {
+            log('Received: ' + e.data);
+        });
+
+        if (window.opener) {
+            window.opener.postMessage('Child loaded!', '*');
+        }
+    <\/script>
+</body>
+</html>`;
+        const defaultChildDataURL = `data:text/html;charset=utf-8,${encodeURIComponent(defaultChildPageHTML)}`;
+
+        // --- Initialization ---
+        function init() {
+            setupEventListeners();
+            updateFeatureString();
+        }
+
+        function setupEventListeners() {
+            // Feature inputs change -> update string
+            const inputs = [
+                els.width, els.height, els.left, els.top,
+                els.popup, els.noopener, els.noreferrer, els.resizable, els.scrollbars,
+                els.menubar, els.toolbar, els.location, els.status
+            ];
+            inputs.forEach(el => el.addEventListener('input', updateFeatureString));
+
+            // Target change
+            els.target.addEventListener('change', () => {
+                if (els.target.value === 'custom') {
+                    els.customTargetGroup.classList.remove('hidden');
+                } else {
+                    els.customTargetGroup.classList.add('hidden');
+                }
+            });
+
+            // Center button
+            els.centerBtn.addEventListener('click', () => {
+                const w = Math.floor(window.screen.width * 0.7);
+                const h = Math.floor(window.screen.height * 0.7);
+                const l = Math.floor((window.screen.width - w) / 2);
+                const t = Math.floor((window.screen.height - h) / 2);
+
+                els.width.value = w;
+                els.height.value = h;
+                els.left.value = l;
+                els.top.value = t;
+                updateFeatureString();
+            });
+
+            // Actions
+            els.openBtn.addEventListener('click', openWindow);
+            els.focusBtn.addEventListener('click', () => openedWindow?.focus());
+            els.blurBtn.addEventListener('click', () => openedWindow?.blur());
+            els.closeChildBtn.addEventListener('click', () => openedWindow?.close());
+            els.checkClosedBtn.addEventListener('click', checkStatus);
+            els.sendMsgBtn.addEventListener('click', sendMessage);
+            els.clearLogsBtn.addEventListener('click', () => els.logsContainer.innerHTML = '');
+
+            // Message listener
+            window.addEventListener('message', (e) => {
+                log(`Received message: ${e.data}`, 'success');
+            });
+        }
+
+        function updateFeatureString() {
+            const features = [];
+
+            // Dimensions
+            if (els.width.value) features.push(`width=${els.width.value}`);
+            if (els.height.value) features.push(`height=${els.height.value}`);
+            if (els.left.value) features.push(`left=${els.left.value}`);
+            if (els.top.value) features.push(`top=${els.top.value}`);
+
+            // Booleans
+            if (els.popup.checked) features.push('popup');
+            if (els.noopener.checked) features.push('noopener');
+            if (els.noreferrer.checked) features.push('noreferrer');
+            if (els.resizable.checked) features.push('resizable=yes'); else features.push('resizable=no');
+            if (els.scrollbars.checked) features.push('scrollbars=yes'); else features.push('scrollbars=no');
+
+            // Selects
+            if (els.menubar.value) features.push(`menubar=${els.menubar.value}`);
+            if (els.toolbar.value) features.push(`toolbar=${els.toolbar.value}`);
+            if (els.location.value) features.push(`location=${els.location.value}`);
+            if (els.status.value) features.push(`status=${els.status.value}`);
+
+            els.featureString.value = features.join(',');
+        }
+
+        function openWindow() {
+            const url = els.url.value.trim() || defaultChildDataURL;
+            let target = els.target.value;
+            if (target === 'custom') target = els.customTargetName.value.trim() || 'customWindow';
+
+            const features = els.featureString.value;
+
+            log(`Opening window... Target: ${target}, Features: ${features}`);
+
+            try {
+                openedWindow = window.open(url, target, features);
+
+                if (openedWindow) {
+                    log('Window opened successfully', 'success');
+                    startPolling();
+                } else {
+                    log('window.open() returned null (Popup blocked?)', 'error');
+                }
+                checkStatus();
+            } catch (e) {
+                log(`Error opening window: ${e.message}`, 'error');
+            }
+        }
+
+        function checkStatus() {
+            if (!openedWindow) {
+                updateStatusUI(false, true, false);
+                return;
+            }
+
+            const isClosed = openedWindow.closed;
+            let canAccess = false;
+            try {
+                // Try to access a property
+                const loc = openedWindow.location.href;
+                canAccess = true;
+            } catch (e) {
+                canAccess = false;
+            }
+
+            updateStatusUI(true, isClosed, canAccess);
+
+            if (isClosed) {
+                stopPolling();
+                log('Detected window closed', 'warn');
+            }
+        }
+
+        function updateStatusUI(hasRef, isClosed, canAccess) {
+            els.statusRef.textContent = hasRef ? 'Object' : 'null';
+            els.statusRef.className = hasRef ? 'font-mono text-emerald-400' : 'font-mono text-slate-500';
+
+            els.statusClosed.textContent = isClosed ? 'Yes' : 'No';
+            els.statusClosed.className = isClosed ? 'font-mono text-rose-400' : 'font-mono text-emerald-400';
+
+            els.statusAccess.textContent = canAccess ? 'Yes (Same Origin)' : 'No (Cross Origin/Closed)';
+            els.statusAccess.className = canAccess ? 'font-mono text-emerald-400' : 'font-mono text-amber-400';
+
+            els.statusIndicator.className = `w-2 h-2 rounded-full ${!hasRef ? 'bg-slate-500' : isClosed ? 'bg-rose-500' : 'bg-emerald-500'}`;
+
+            // Button states
+            const active = hasRef && !isClosed;
+            els.focusBtn.disabled = !active;
+            els.blurBtn.disabled = !active;
+            els.closeChildBtn.disabled = !active;
+            els.checkClosedBtn.disabled = !hasRef;
+            els.sendMsgBtn.disabled = !active;
+        }
+
+        function startPolling() {
+            stopPolling();
+            pollInterval = setInterval(checkStatus, 1000);
+        }
+
+        function stopPolling() {
+            if (pollInterval) {
+                clearInterval(pollInterval);
+                pollInterval = null;
+            }
+        }
+
+        function sendMessage() {
+            if (!openedWindow || openedWindow.closed) return;
+            const msg = els.messageInput.value;
+            try {
+                openedWindow.postMessage(msg, '*');
+                log(`Sent message: ${msg}`);
+                els.messageInput.value = '';
+            } catch (e) {
+                log(`Failed to send: ${e.message}`, 'error');
+            }
+        }
+
+        function log(msg, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log-entry log-${type}`;
+
+            const time = document.createElement('span');
+            time.className = 'log-time';
+            time.textContent = `[${new Date().toLocaleTimeString()}]`;
+
+            div.appendChild(time);
+            div.appendChild(document.createTextNode(msg));
+
+            els.logsContainer.appendChild(div);
+            els.logsContainer.scrollTop = els.logsContainer.scrollHeight;
+        }
+
+        // Initialize
+        init();
+    </script>
+</body>
+
+</html>
