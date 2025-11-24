@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧰 DevToolBox
+# 🧰 DevPad
 
 **A curated collection of powerful web-based developer tools and utilities**
 
